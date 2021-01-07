@@ -1,7 +1,10 @@
-FROM ros:kinetic-robot
+FROM ros:melodic-robot
 
-RUN sudo apt update &&\
-    sudo apt install wget
+RUN apt-get update -y && \
+    apt-get install -y \
+    wget \
+    && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV DOWNLOAD_URL https://download.slamtec.com/api/download/slamware-ros-sdk/2.6.0
 ENV FILE_NAME slametec.tar.bz2
@@ -15,11 +18,11 @@ RUN wget -O /tmp/$FILE_NAME $DOWNLOAD_URL &&\
     mv /tmp/slamware_ros_sdk_linux-x86_64-gcc5.4/src $CATKIN_WS &&\
     rm -r /tmp/*
 
-RUN /bin/bash -c "source /opt/ros/kinetic/setup.bash" &&\
+RUN /bin/bash -c "source /opt/ros/$ROS_DISTRO/setup.bash" &&\
     cd $CATKIN_WS &&\
-    /bin/bash -c "source /opt/ros/kinetic/setup.bash && catkin_make install"
+    /bin/bash -c "source /opt/ros/$ROS_DISTRO/setup.bash && catkin_make install"
 
-RUN echo "source \"${CATKIN_WS}/devel/setup.bash\"" >> /opt/ros/kinetic/setup.bash
+RUN echo "source \"${CATKIN_WS}/devel/setup.bash\"" >> /opt/ros/$ROS_DISTRO/setup.bash
 
 ENV LASER_IP 192.168.11.1
 CMD ["bash", "-c", "roslaunch slamware_ros_sdk slamware_ros_sdk_server_node.launch ip_address:=${LASER_IP}"]
