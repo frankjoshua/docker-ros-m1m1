@@ -3,6 +3,7 @@
 ## Description
 
 Runs a ROS Slamtec M1M1 laser in a Docker container. Probably need --network="host" because ROS uses ephemeral ports.
+x86 only.
 
 ## Example
 
